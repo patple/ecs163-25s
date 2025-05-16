@@ -196,10 +196,11 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("text-anchor", "middle")
         .attr("font-weight", "bold")
         .text("Distribution of Pokemon by Body Type")
+   
 
 
 
-
+        
 
 
         
