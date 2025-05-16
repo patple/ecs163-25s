@@ -53,13 +53,13 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     })
 
     const barChartdata = Object.entries(numType).map(([type, count]) => ({type: type, count: count}))
-    const chartWidth = width - marginLeft - marginRight - 2000
-    const chartHeight = height - marginTop - marginBottom - 1200
+    const chartWidth = width - marginLeft - marginRight - 2500
+    const chartHeight = height - marginTop - marginBottom - 1500
 
     // X lables
     g.append("text")
-        .attr("x", width - marginLeft - marginRight - 2400)
-        .attr("y", height - marginTop - 1200)
+        .attr("x", width - marginLeft - marginRight - 2700)
+        .attr("y", height - marginTop - 1500)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .text("Pokemon Type")
@@ -123,7 +123,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         if(body) bodyTypecount[body] = (bodyTypecount[body] || 0) + 1
     })
     const pieChart = Object.entries(bodyTypecount).map(([body, count]) => ({name: body, value: count}))
-    const radius = Math.min(width, height/ 4.5)
+    const radius = Math.min(width, height/ 5.5)
 
     const color = d3.scaleOrdinal()
         .domain(pieChart.map(d => d.name))
@@ -138,7 +138,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .outerRadius(radius)
 
     const arcs = pie(pieChart)
-    const pieGraph = svg.append("g").attr("transform", `translate(${500}, ${height - 600})`)
+    const pieGraph = svg.append("g").attr("transform", `translate(${1500}, ${height - 1575})`)
     
     pieGraph.append("g")
         .attr("stroke", "white")
@@ -183,14 +183,17 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
 
 
+
+
+
     //Stream Graph
-    const streamWidth = width - marginLeft - marginRight -2000;
-    const streamHeight = 500;
+    const streamWidth = width - marginLeft - marginRight -2270;
+    const streamHeight = 450;
     const streamMarginTop = 10;
     const streamMarginBottom = 20;
 
 
-    const streamGraph = svg.append("g").attr("transform", `translate(${width - 2000}, ${height - 1750})`)
+    const streamGraph = svg.append("g").attr("transform", `translate(${width - 2550}, ${height - 1950})`)
 
     const generations = Array.from(new Set(data.map(d => d.Generation))).sort()
     const allTypes = new Set()
@@ -249,7 +252,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         
     //Yaxis label
     streamGraph.append("text")
-        .attr("x", -(chartHeight - 500))
+        .attr("x", -(chartHeight - 300))
         .attr("y", -marginLeft + 30)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
@@ -257,8 +260,8 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .text("Number of Pokemon")
 
      g.append("text")
-        .attr("x", width - marginLeft - marginRight - 1500)
-        .attr("y", height - marginTop - 1200)
+        .attr("x", width - marginLeft - marginRight - 2100)
+        .attr("y", height - marginTop - 1450)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .text("Pokemon Generations")
@@ -274,8 +277,34 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     //key for streamgraph
     const key = streamGraph.append("g")
         .attr("class", "legend")
+        .attr("transform", `translate(${streamWidth + 20}, 20)`)
 
+    const typeList = Array.from(allTypes).sort()
 
+    const keyHeight = 20
+    const keySpacing = 5
+
+    key.selectAll("key-item")
+        .data(typeList)
+        .enter()
+        .append("g")
+        .attr("class", "key-item")
+        .attr("transform", (d, i) => `translate(0, ${ i * (keyHeight + keySpacing)})`)
+        .each(function(d){
+            const g = d3.select(this)
+            g.append("rect")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", 16)
+                .attr("height", 16)
+                .attr("fill", typeColors[d]);
+
+            g.append("text")
+                .attr("x", 20)
+                .attr("y", 10)
+                .style("font-size", "12px")
+                .text(d);
+        })
     
     }).catch(function(error){
         console.log(error);
