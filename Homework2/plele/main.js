@@ -1,10 +1,11 @@
 
-const width = 600
-const height = 400
+const width = 3000
+const height = 2000
 const marginTop = 45;
 const marginRight = 100;
 const marginBottom = 60;
-const marginLeft = 60;
+const marginLeft = 65;
+
 
 
 // taken from here https://gist.github.com/apaleslimghost/0d25ec801ca4fc43317bcff298af43c3 
@@ -52,25 +53,27 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     })
 
     const barChartdata = Object.entries(numType).map(([type, count]) => ({type: type, count: count}))
-    const chartWidth = width - marginLeft - marginRight
-    const chartHeight = height - marginTop - marginBottom
+    const chartWidth = width - marginLeft - marginRight - 2000
+    const chartHeight = height - marginTop - marginBottom - 1200
 
     // X lables
     g.append("text")
-        .attr("x", width - marginLeft - marginRight * 3.25)
-        .attr("y", height - marginTop - 5)
+        .attr("x", width - marginLeft - marginRight - 2400)
+        .attr("y", height - marginTop - 1200)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .text("Pokemon Type")
+        
 
     // Y labels
     g.append("text")
-        .attr("x", -(chartHeight/2))
-        .attr("y", -marginLeft + 25)
+        .attr("x", -(chartHeight - 350))
+        .attr("y", -marginLeft + 30)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .text("Number of Pokemon")
+        
 
     // X ticks
     const x = d3.scaleBand()
@@ -120,11 +123,11 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         if(body) bodyTypecount[body] = (bodyTypecount[body] || 0) + 1
     })
     const pieChart = Object.entries(bodyTypecount).map(([body, count]) => ({name: body, value: count}))
-    const radius = Math.min(width, height/ 1.5)
+    const radius = Math.min(width, height/ 4.5)
 
     const color = d3.scaleOrdinal()
         .domain(pieChart.map(d => d.name))
-        .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), data.length).reverse())
+        .range(d3.quantize(t => d3.interpolateSpectral(t * 0.8 + 0.1), pieChart.length).reverse())
 
     const pie = d3.pie()
         .sort(null)
@@ -135,7 +138,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .outerRadius(radius)
 
     const arcs = pie(pieChart)
-    const pieGraph = svg.append("g").attr("transform", `translate(${300}, ${500})`)
+    const pieGraph = svg.append("g").attr("transform", `translate(${500}, ${height - 600})`)
     
     pieGraph.append("g")
         .attr("stroke", "white")
@@ -159,14 +162,120 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .join("text")
         .attr("transform", d => `translate(${arcLabel.centroid(d)})`)
         .call(text => text.append("tspan")
+        .style("font-size", "12px")
         .attr("y", "-0.4em")
         .attr("font-weight", "bold")
         .text(d => d.data.name))
-        .call(text => text.filter(d => (d.endAngle - d.startAngle) > 0.25).append("tspan")
+        .call(text => text.filter(d => (d.endAngle - d.startAngle) > 0.05).append("tspan")
         .attr("x", 0)
         .attr("y", "0.7em")
         .attr("fill-opacity", 0.7)
         .text(d => d.data.value.toLocaleString("en-US")));
+
+    //pieChart label
+    pieGraph.append("text")
+        .attr("x", 0)
+        .attr("y", radius + 45)
+        .attr("font-size", "15px")
+        .attr("text-anchor", "middle")
+        .attr("font-weight", "bold")
+        .text("Distribution of Pokemon by Body Type")
+
+
+
+    //Stream Graph
+    const streamWidth = width - marginLeft - marginRight -2000;
+    const streamHeight = 500;
+    const streamMarginTop = 10;
+    const streamMarginBottom = 20;
+
+
+    const streamGraph = svg.append("g").attr("transform", `translate(${width - 2000}, ${height - 1750})`)
+
+    const generations = Array.from(new Set(data.map(d => d.Generation))).sort()
+    const allTypes = new Set()
+    data.forEach(d =>{
+        allTypes.add(d.Type_1)
+        if (d.Type_2) allTypes.add(d.Type_2)
+    })
+
+    const typePerGen = generations.map(gen =>{
+        const genCount = data.filter(d => d.Generation == gen)
+        const counts = {}
+        allTypes.forEach(type =>{
+            counts[type] = genCount.filter(d => d.Type_1 == type || d.Type_2 == type).length
+        })
+        return {generation: gen, ...counts}
+    })
+
+    const series = d3.stack()
+        .offset(d3.stackOffsetWiggle)
+        .order(d3.stackOrderInsideOut)
+        .keys(Array.from(allTypes))
+        (typePerGen)
+
+    const xStream = d3.scaleLinear()
+        .domain(d3.extent(generations))
+        .range([0, streamWidth])
+    
+    const yStream = d3.scaleLinear()
+        .domain([d3.min(series, d => d3.min(d, d => d[0])), d3.max(series, d => d3.max(d, d => d[1]))])
+        .range([streamHeight - streamMarginBottom, streamMarginTop])
+        
+    const area = d3.area()
+        .x(d => xStream(+d.data.generation))
+        .y0(d => yStream(d[0]))
+        .y1(d => yStream(d[1]))
+        .curve(d3.curveBasis)
+    
+    streamGraph.append("g")
+        .selectAll("path")
+        .data(series)
+        .join("path")
+        .attr("fill", d => typeColors[d.key])
+        .attr("d", area)
+        .append("title")
+        .text(d =>`${d.key}: ${d[d.length - 1][1] - d[d.length -1][0]}` )
+
+    //Xaxis
+    streamGraph.append("g" )
+        .attr("transform", `translate(0, ${streamHeight - streamMarginBottom})`)
+        .call(d3.axisBottom(xStream).ticks(generations.length).tickFormat(d => `Gen ${d}`))
+       
+    //Yaxis
+    streamGraph.append("g" )
+        .attr("transform", `translate(0, 0)`)
+        .call(d3.axisLeft(yStream).ticks(5))
+        
+    //Yaxis label
+    streamGraph.append("text")
+        .attr("x", -(chartHeight - 500))
+        .attr("y", -marginLeft + 30)
+        .attr("font-size", "15px")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .text("Number of Pokemon")
+
+     g.append("text")
+        .attr("x", width - marginLeft - marginRight - 1500)
+        .attr("y", height - marginTop - 1200)
+        .attr("font-size", "15px")
+        .attr("text-anchor", "middle")
+        .text("Pokemon Generations")
+        
+
+    streamGraph.append("text")
+        .attr("x", streamWidth /2 )
+        .attr("y", -10)
+        .attr("text-anchor", "middle")
+        .attr("font-weight","bold")
+        .text("Pokemon Type Across Generations")
+    
+    //key for streamgraph
+    const key = streamGraph.append("g")
+        .attr("class", "legend")
+
+
     
     }).catch(function(error){
         console.log(error);
