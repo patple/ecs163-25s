@@ -1,5 +1,5 @@
 
-const width = 3000
+const width = 1900
 const height = 2000
 const marginTop = 45;
 const marginRight = 100;
@@ -53,7 +53,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     })
 
     const barChartdata = Object.entries(numType).map(([type, count]) => ({type: type, count: count}))
-    const chartWidth = width - marginLeft - marginRight - 2500
+    const chartWidth = width - marginLeft - marginRight - 1400
     const chartHeight = height - marginTop - marginBottom - 1500
 
     // X lables
@@ -73,6 +73,14 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .text("Number of Pokemon")
+
+    g.append("text")
+        .attr("x", -(chartHeight - 550))
+        .attr("y", -marginLeft + 525)
+        .attr("font-size", "15px")
+        .attr("text-anchor", "middle")
+        .text("Pokemon Type")
+    
     
 
     g.append("text")
@@ -194,14 +202,16 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
 
 
+        
+
     //Stream Graph
-    const streamWidth = width - marginLeft - marginRight -2270;
+    const streamWidth = width - marginLeft - marginRight - 1150;
     const streamHeight = 450;
     const streamMarginTop = 10;
     const streamMarginBottom = 20;
 
 
-    const streamGraph = svg.append("g").attr("transform", `translate(${width - 2550}, ${height - 1950})`)
+    const streamGraph = svg.append("g").attr("transform", `translate(${width - 1450}, ${height - 1950})`)
 
     const generations = Array.from(new Set(data.map(d => d.Generation))).sort()
     const allTypes = new Set()
@@ -266,15 +276,15 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .text("Number of Pokemon")
-
+    // X axis label
      g.append("text")
-        .attr("x", width - marginLeft - marginRight - 2100)
+        .attr("x", streamWidth/2 + 375)
         .attr("y", height - marginTop - 1450)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .text("Pokemon Generations")
         
-
+   
     streamGraph.append("text")
         .attr("x", streamWidth /2 )
         .attr("y", -10)
