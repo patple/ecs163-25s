@@ -96,7 +96,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .domain(barChartdata.map(d => d.type))
         .range([0, chartWidth])
         .paddingInner(0.3)
-        .paddingOuter(0.2);
+        .paddingOuter(0.2)
 
     const xAxisCall = d3.axisBottom(x);
     g.append("g")
@@ -118,13 +118,13 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     g.append("g").call(yAxisCall);
 
     // bars
-    const bars = g.selectAll("rect").data(barChartdata);
+    const bars = g.selectAll("rect").data(barChartdata)
     bars.enter().append("rect")
         .attr("y", d => y(d.count))
         .attr("x", d => x(d.type))
         .attr("width", x.bandwidth())
         .attr("height", d => y(0) - y(d.count))
-        .attr("fill", d => typeColors[d.type]);
+        .attr("fill", d => typeColors[d.type])
 
 
 
@@ -164,7 +164,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("fill", d => color(d.data.name))
         .attr("d", arc)
         .append("title")
-        .text(d => `${d.data.name}: ${d.data.value.toLocaleString("en-US")}`);
+        .text(d => `${d.data.name}: ${d.data.value.toLocaleString("en-US")}`)
 
     const labels = radius * 0.8
     const arcLabel = d3.arc()
@@ -186,7 +186,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("x", 0)
         .attr("y", "0.7em")
         .attr("fill-opacity", 0.7)
-        .text(d => d.data.value.toLocaleString("en-US")));
+        .text(d => d.data.value.toLocaleString("en-US")))
 
     //pieChart label
     pieGraph.append("text")
@@ -200,12 +200,13 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
 
 
-        
+
 
 
         
 
     //Stream Graph
+    //CODE REFERENCE FROM D3 GALLERY
     const streamWidth = width - marginLeft - marginRight - 1150;
     const streamHeight = 450;
     const streamMarginTop = 10;
@@ -214,6 +215,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
     const streamGraph = svg.append("g").attr("transform", `translate(${width - 1450}, ${height - 1950})`)
 
+    // sorts the data by seperating the pokemon by type per generation
     const generations = Array.from(new Set(data.map(d => d.Generation))).sort()
     const allTypes = new Set()
     data.forEach(d =>{
@@ -285,7 +287,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("text-anchor", "middle")
         .text("Pokemon Generations")
         
-   
+    // graph label
     streamGraph.append("text")
         .attr("x", streamWidth /2 )
         .attr("y", -10)
@@ -316,13 +318,13 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
                 .attr("y", 0)
                 .attr("width", 16)
                 .attr("height", 16)
-                .attr("fill", typeColors[d]);
+                .attr("fill", typeColors[d])
 
             g.append("text")
                 .attr("x", 20)
                 .attr("y", 10)
                 .style("font-size", "12px")
-                .text(d);
+                .text(d)
         })
     
     }).catch(function(error){
