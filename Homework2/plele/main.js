@@ -67,12 +67,20 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
     // Y labels
     g.append("text")
-        .attr("x", -(chartHeight - 350))
+        .attr("x", -(chartHeight - 220))
         .attr("y", -marginLeft + 30)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .text("Number of Pokemon")
+    
+
+    g.append("text")
+        .attr("x", -(chartHeight - 550))
+        .attr("y", -marginLeft + 45)
+        .attr("font-size", "15px")
+        .attr("text-anchor", "middle")
+        .text("Distrubtion of Pokemon Types")
         
 
     // X ticks
@@ -138,7 +146,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .outerRadius(radius)
 
     const arcs = pie(pieChart)
-    const pieGraph = svg.append("g").attr("transform", `translate(${1500}, ${height - 1575})`)
+    const pieGraph = svg.append("g").attr("transform", `translate(${1500}, ${height - 1630})`)
     
     pieGraph.append("g")
         .attr("stroke", "white")
