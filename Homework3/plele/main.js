@@ -12,7 +12,7 @@ let pieMargin = {top: 10, right: 30, bottom: 30, left: 60},
     pieWidth = 400 - pieMargin.left - pieMargin.right,
     pieHeight = 350 - pieMargin.top - pieMargin.bottom;
 
-let streamLeft = 0, streamTop = 440;
+let streamLeft = 0, streamTop = 450;
 let streamMargin = {top: 10, right: 30, bottom: 30, left: 60},
     streamWidth = width - 600-streamMargin.left - streamMargin.right,
     streamHeight = height- 1300 - streamMargin.top - streamMargin.bottom;
@@ -253,7 +253,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     
     const yStream = d3.scaleLinear()
         .domain([d3.min(series, d => d3.min(d, d => d[0])), d3.max(series, d => d3.max(d, d => d[1]))])
-        .range([streamHeight, 0])
+        .range([0, streamHeight])
         
     const area = d3.area()
         .x(d => xStream(+d.data.generation))
