@@ -9,12 +9,12 @@ let barMargin = {top: 10, right: 30, bottom: 30, left: 60},
 
 let pieLeft = 400, pieTop = 0;
 let pieMargin = {top: 10, right: 30, bottom: 30, left: 60},
-    pieWidth = 400 - pieMargin.left - pieMargin.right,
-    pieHeight = 350 - pieMargin.top - pieMargin.bottom;
+    pieWidth = 450 - pieMargin.left - pieMargin.right,
+    pieHeight = 555 - pieMargin.top - pieMargin.bottom;
 
 let streamLeft = 0, streamTop = 450;
-let streamMargin = {top: 10, right: 30, bottom: 30, left: 60},
-    streamWidth = width - 600-streamMargin.left - streamMargin.right,
+let streamMargin = {top: 10, right: 30, bottom: 0, left: 60},
+    streamWidth = width - 950-streamMargin.left - streamMargin.right,
     streamHeight = height- 1300 - streamMargin.top - streamMargin.bottom;
 
 
@@ -50,7 +50,7 @@ const svg = d3.select("svg")
 const g = svg.append("g")
     .attr("width", barWidth + barMargin.left + barMargin.right)
     .attr("height", barHeight + barMargin.top + barMargin.bottom)
-    .attr("transform", `translate(${barMargin.left}, ${barMargin.top})`);
+    .attr("transform", `translate(${barMargin.left+1000}, ${barMargin.top+500})`);
 
 d3.csv("pokemon_alopez247.csv").then(data =>{
 
@@ -164,7 +164,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .outerRadius(radius)
 
     const arcs = pie(pieChart)
-    const pieGraph = svg.append("g").attr("transform", `translate(${pieMargin.left+500}, ${pieTop+750})`);
+    const pieGraph = svg.append("g").attr("transform", `translate(${pieMargin.left+400}, ${pieTop+450})`);
     
     pieGraph.append("g")
         .attr("stroke", "white")
@@ -201,7 +201,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     //pieChart label
     pieGraph.append("text")
         .attr("x", 0)
-        .attr("y", radius + 45)
+        .attr("y", radius + 25)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .attr("font-weight", "bold")
@@ -222,7 +222,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     const streamGraph = svg.append("g") 
                 .attr("width", streamWidth + streamMargin.left + streamMargin.right)
                 .attr("height", streamHeight + streamMargin.top + streamMargin.bottom)
-                .attr("transform", `translate(${streamMargin.left+350}, ${streamTop})`);
+                .attr("transform", `translate(${streamMargin.left+900}, ${streamTop-50})`);
 
     // sorts the data by seperating the pokemon by type per generation
     const generations = Array.from(new Set(data.map(d => d.Generation))).sort()
@@ -272,7 +272,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
     //Xaxis
     streamGraph.append("g" )
-        .attr("transform", `translate(0, ${streamHeight})`)
+        .attr("transform", `translate(0, ${streamMargin.bottom})`)
         .call(d3.axisBottom(xStream).ticks(generations.length).tickFormat(d => `Gen ${d}`))
        
     //Yaxis
@@ -308,12 +308,12 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     //key for streamgraph
     const key = streamGraph.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${streamWidth + 20}, 20)`)
+        .attr("transform", `translate(${streamWidth},  ${streamTop})`)
 
     const typeList = Array.from(allTypes).sort()
 
-    const keyHeight = 20
-    const keySpacing = 5
+    const keyHeight = 100
+    const keySpacing = 100
 
     key.selectAll("key-item")
         .data(typeList)
