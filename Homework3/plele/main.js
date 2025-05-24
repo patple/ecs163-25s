@@ -12,10 +12,10 @@ let pieMargin = {top: 10, right: 30, bottom: 30, left: 60},
     pieWidth = 400 - pieMargin.left - pieMargin.right,
     pieHeight = 350 - pieMargin.top - pieMargin.bottom;
 
-let streamLeft = 0, streamTop = 15;
+let streamLeft = 0, streamTop = 440;
 let streamMargin = {top: 10, right: 30, bottom: 30, left: 60},
-    streamWidth = width - 420-streamMargin.left - streamMargin.right,
-    streamHeight = height- 1400 - streamMargin.top - streamMargin.bottom;
+    streamWidth = width - 600-streamMargin.left - streamMargin.right,
+    streamHeight = height- 1300 - streamMargin.top - streamMargin.bottom;
 
 
 // taken from here https://gist.github.com/apaleslimghost/0d25ec801ca4fc43317bcff298af43c3 
@@ -291,8 +291,8 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         
     // X axis label
      g.append("text")
-        .attr("x", streamWidth/2 + 375)
-        .attr("y", streamheight - streamTop - 1450)
+        .attr("x", streamWidth/2)
+        .attr("y", streamheight + 40)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .text("Pokemon Generations")
