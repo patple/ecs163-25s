@@ -4,18 +4,18 @@ const height = window.innerHeight;
 
 let barLeft = 0, barTop = 0;
 let barMargin = {top: 10, right: 30, bottom: 30, left: 60},
-    barWidth = 400 - barMargin.left - barMargin.right,
-    barHeight = 350 - barMargin.top - barMargin.bottom;
+    barWidth = width -1050- barMargin.left - barMargin.right,
+    barHeight = height- 500 - barMargin.top - barMargin.bottom;
 
 let pieLeft = 400, pieTop = 0;
 let pieMargin = {top: 10, right: 30, bottom: 30, left: 60},
-    pieWidth = 450 - pieMargin.left - pieMargin.right,
-    pieHeight = 555 - pieMargin.top - pieMargin.bottom;
+    pieWidth = width - pieMargin.left - pieMargin.right,
+    pieHeight = height - pieMargin.top - pieMargin.bottom;
 
-let streamLeft = 0, streamTop = 450;
+let streamLeft = 0, streamTop = 400;
 let streamMargin = {top: 10, right: 30, bottom: 0, left: 60},
     streamWidth = width - 950-streamMargin.left - streamMargin.right,
-    streamHeight = height- 1300 - streamMargin.top - streamMargin.bottom;
+    streamHeight = height- 1250 - streamMargin.top - streamMargin.bottom;
 
 
 // taken from here https://gist.github.com/apaleslimghost/0d25ec801ca4fc43317bcff298af43c3 
@@ -50,7 +50,7 @@ const svg = d3.select("svg")
 const g = svg.append("g")
     .attr("width", barWidth + barMargin.left + barMargin.right)
     .attr("height", barHeight + barMargin.top + barMargin.bottom)
-    .attr("transform", `translate(${barMargin.left+1000}, ${barMargin.top+500})`);
+    .attr("transform", `translate(${barMargin.left+1000}, ${barMargin.top+450})`);
 
 d3.csv("pokemon_alopez247.csv").then(data =>{
 
@@ -82,20 +82,11 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
-        .text("Number of Pokemon")
+        .text("Number of Pokemon")    
 
     g.append("text")
-        .attr("x", -(barHeight - 550))
-        .attr("y", -40)
-        .attr("font-size", "15px")
-        .attr("text-anchor", "middle")
-        .text("Pokemon Type")
-    
-    
-
-    g.append("text")
-        .attr("x", -(barHeight - 550))
-        .attr("y", -45)
+        .attr("x", -(barHeight - 400))
+        .attr("y", -20)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .text("Distrubtion of Pokemon Types")
@@ -149,7 +140,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         if(body) bodyTypecount[body] = (bodyTypecount[body] || 0) + 1
     })
     const pieChart = Object.entries(bodyTypecount).map(([body, count]) => ({name: body, value: count}))
-    const radius = Math.min(pieWidth, pieHeight)
+    const radius = Math.min(pieWidth, pieHeight * 0.40)
 
     const color = d3.scaleOrdinal()
         .domain(pieChart.map(d => d.name))
@@ -164,7 +155,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .outerRadius(radius)
 
     const arcs = pie(pieChart)
-    const pieGraph = svg.append("g").attr("transform", `translate(${pieMargin.left+400}, ${pieTop+450})`);
+    const pieGraph = svg.append("g").attr("transform", `translate(${pieMargin.left+375}, ${pieTop+450})`);
     
     pieGraph.append("g")
         .attr("stroke", "white")
@@ -282,8 +273,8 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         
     //Yaxis label
     streamGraph.append("text")
-        .attr("x", -(streamHeight - 300))
-        .attr("y", -marginLeft + 30)
+        .attr("x", 150)
+        .attr("y", streamMargin.left -100)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
@@ -291,16 +282,16 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         
     // X axis label
      g.append("text")
-        .attr("x", streamWidth/2)
-        .attr("y", streamheight + 40)
+        .attr("x", streamMargin.bottom + 350)
+        .attr("y",streamMargin.bottom - 50)
         .attr("font-size", "15px")
         .attr("text-anchor", "middle")
         .text("Pokemon Generations")
         
     // graph label
     streamGraph.append("text")
-        .attr("x", streamWidth /2 )
-        .attr("y", -10)
+        .attr("x", 400 )
+        .attr("y", -320)
         .attr("text-anchor", "middle")
         .attr("font-weight","bold")
         .text("Pokemon Type Across Generations")
@@ -308,30 +299,30 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     //key for streamgraph
     const key = streamGraph.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${streamWidth},  ${streamTop})`)
+        .attr("transform", `translate(${streamMargin.left -150},${streamMargin.left -400} )`)
 
     const typeList = Array.from(allTypes).sort()
 
-    const keyHeight = 100
-    const keySpacing = 100
 
-    key.selectAll("key-item")
+    const keySpacing = 20
+
+    key.selectAll(".key-item")
         .data(typeList)
         .enter()
         .append("g")
         .attr("class", "key-item")
-        .attr("transform", (d, i) => `translate(0, ${ i * (keyHeight + keySpacing)})`)
+        .attr("transform", (d, i) => `translate(0, ${ i * keySpacing})`)
         .each(function(d){
             const g = d3.select(this)
             g.append("rect")
-                .attr("x", 0)
+                .attr("x", -streamMargin.left+10)
                 .attr("y", 0)
                 .attr("width", 16)
                 .attr("height", 16)
                 .attr("fill", typeColors[d])
 
             g.append("text")
-                .attr("x", 20)
+                .attr("x", -streamMargin.left+30)
                 .attr("y", 10)
                 .style("font-size", "12px")
                 .text(d)
