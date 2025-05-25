@@ -212,10 +212,11 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     //Stream Graph
     //CODE REFERENCE FROM D3 GALLERY
 
+    //handles the color dimming when the key is click on
     function updateColor(){
         g.selectAll("rect")
             .transition()
-            .duration(300)
+            .duration(700)
            .attr("opacity", d=>{
             if(!selectedTypeColor)
                 return 1
@@ -225,7 +226,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
          streamGraph.selectAll(".stream-colors")
             .transition()
-            .duration(300)
+            .duration(700)
            .attr("opacity", d=>{
             if(!selectedTypeColor)
                 return 1
