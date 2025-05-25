@@ -17,6 +17,10 @@ let streamMargin = {top: 10, right: 30, bottom: 0, left: 60},
     streamWidth = width - 950-streamMargin.left - streamMargin.right,
     streamHeight = height- 1250 - streamMargin.top - streamMargin.bottom;
 
+//FOR HW3
+// Selections and Brushing 
+// transitions were uses for the selection of stream and bar graph
+
 
 // taken from here https://gist.github.com/apaleslimghost/0d25ec801ca4fc43317bcff298af43c3 
 const typeColors = {
@@ -138,8 +142,6 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     
     // PIE CHART
     // REFERENCE CODE USED FROM D3 GALLERY
-   
-
     const bodyTypecount = {}
     data.forEach(d => {
         const body = d["Body_Style"]
@@ -179,7 +181,9 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("fill", d => color(d.data.name))
         .attr("d", arc)
         .append("title")
+        //updated tooltip to display more info about each body type
         .text(d =>{
+        
             const typeLines = Object.entries(d.data.types)
                 .map(([type,count]) => `-${type}:${count}`)
                 .join("\n");
@@ -232,6 +236,8 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     //Stream Graph
     //CODE REFERENCE FROM D3 GALLERY
 
+
+    //HW3 Update
     //handles the color dimming when the key is click on
     function updateColor(){
         g.selectAll("rect")
