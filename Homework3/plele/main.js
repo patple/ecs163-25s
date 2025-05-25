@@ -104,6 +104,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
     const xAxisCall = d3.axisBottom(x);
     g.append("g")
+        .attr("class", "x-axis")
         .attr("transform", `translate(0, ${barHeight})`)
         .call(xAxisCall)
         .selectAll("text")
@@ -121,6 +122,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     const yAxisCall = d3.axisLeft(y).ticks(6);
     g.append("g").call(yAxisCall);
 
+   
     // bars
     const bars = g.selectAll("rect").data(barChartdata)
     bars.enter().append("rect")
@@ -129,14 +131,15 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("width", x.bandwidth())
         .attr("height", d => y(0) - y(d.count))
         .attr("fill", d => typeColors[d.type])
+        
 
 
 
-
-
-
+    
     // PIE CHART
     // REFERENCE CODE USED FROM D3 GALLERY
+   
+
     const bodyTypecount = {}
     data.forEach(d => {
         const body = d["Body_Style"]
@@ -144,6 +147,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     })
     const pieChart = Object.entries(bodyTypecount).map(([body, count]) => ({name: body, value: count}))
     const radius = Math.min(pieWidth, pieHeight * 0.40)
+    
 
     const color = d3.scaleOrdinal()
         .domain(pieChart.map(d => d.name))
@@ -159,6 +163,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
     const arcs = pie(pieChart)
     const pieGraph = svg.append("g").attr("transform", `translate(${pieMargin.left+375}, ${pieTop+450})`);
+    const ogSize = pieGraph.attr("transform")
     
     pieGraph.append("g")
         .attr("stroke", "white")
@@ -192,6 +197,8 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("fill-opacity", 0.7)
         .text(d => d.data.value.toLocaleString("en-US")))
 
+  
+
     //pieChart label
     pieGraph.append("text")
         .attr("x", 0)
@@ -200,7 +207,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("text-anchor", "middle")
         .attr("font-weight", "bold")
         .text("Distribution of Pokemon by Body Type")
-   
+        
 
 
 
