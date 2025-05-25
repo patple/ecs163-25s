@@ -42,6 +42,9 @@ const typeColors = {
 
 
 
+let selectedTypeColor = null
+
+
 // BAR GRAPH 
 // REFERENCE CODE USED FROM TEMPLATE EXAMPLE
 const svg = d3.select("svg")
@@ -209,6 +212,36 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     //Stream Graph
     //CODE REFERENCE FROM D3 GALLERY
 
+    function updateColor(){
+        g.selectAll("rect")
+            .transition()
+            .duration(300)
+           .attr("opacity", d=>{
+            if(!selectedTypeColor)
+                return 1
+            return d.type == selectedTypeColor? 1:0.2
+           })
+        
+
+         streamGraph.selectAll(".stream-colors")
+            .transition()
+            .duration(300)
+           .attr("opacity", d=>{
+            if(!selectedTypeColor)
+                return 1
+            return d.key == selectedTypeColor? 1:0.2
+           })
+        
+        key.selectAll("rect")
+            .transition()
+            .duration(300)
+           .attr("opacity", d=>{
+            if(!selectedTypeColor)
+                return 1
+            return d == selectedTypeColor? 1:0.2
+           })
+
+    }
 
     const streamGraph = svg.append("g") 
                 .attr("width", streamWidth + streamMargin.left + streamMargin.right)
@@ -257,6 +290,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .data(series)
         .join("path")
         .attr("fill", d => typeColors[d.key])
+        .attr("class", "stream-colors")
         .attr("d", area)
         .append("title")
         .text(d =>`${d.key}: ${d[d.length - 1][1] - d[d.length -1][0]}` )
@@ -320,15 +354,37 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
                 .attr("width", 16)
                 .attr("height", 16)
                 .attr("fill", typeColors[d])
+                .style("cursor", "pointer")
+                .on("click", ()=>{
+                    if(selectedTypeColor == d){
+                        selectedTypeColor = null
+                    }else{
+                        selectedTypeColor = d
+                    }
+                    updateColor()
+                })
 
             g.append("text")
                 .attr("x", -streamMargin.left+30)
                 .attr("y", 10)
                 .style("font-size", "12px")
                 .text(d)
+                .on("click", ()=>{
+                    if(selectedTypeColor == d){
+                        selectedTypeColor = null
+                    }else{
+                        selectedTypeColor = d
+                    }
+                    updateColor()
+                })
         })
+
+    
     
     }).catch(function(error){
         console.log(error);
 
 })
+
+
+
