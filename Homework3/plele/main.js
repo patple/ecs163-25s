@@ -141,6 +141,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
     
     // PIE CHART
+    //Brushing added to pie chart in form of tool tip
     // REFERENCE CODE USED FROM D3 GALLERY
     const bodyTypecount = {}
     data.forEach(d => {
@@ -382,6 +383,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
                 .attr("height", 16)
                 .attr("fill", typeColors[d])
                 .style("cursor", "pointer")
+                //updates the spotlighted color when key is clicked
                 .on("click", ()=>{
                     if(selectedTypeColor == d){
                         selectedTypeColor = null
@@ -396,14 +398,7 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
                 .attr("y", 10)
                 .style("font-size", "12px")
                 .text(d)
-                .on("click", ()=>{
-                    if(selectedTypeColor == d){
-                        selectedTypeColor = null
-                    }else{
-                        selectedTypeColor = d
-                    }
-                    updateColor()
-                })
+                
         })
 
     
