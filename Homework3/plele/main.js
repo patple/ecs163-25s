@@ -143,9 +143,16 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
     const bodyTypecount = {}
     data.forEach(d => {
         const body = d["Body_Style"]
-        if(body) bodyTypecount[body] = (bodyTypecount[body] || 0) + 1
+        const type =d["Type_1"]
+        if (body && type){
+            if(!bodyTypecount[body]){
+                bodyTypecount[body] = {count: 0, types: {}};
+            }
+            bodyTypecount[body].count += 1;
+            bodyTypecount[body].types[type] = (bodyTypecount[body].types[type] || 0) + 1
+        }
     })
-    const pieChart = Object.entries(bodyTypecount).map(([body, count]) => ({name: body, value: count}))
+    const pieChart = Object.entries(bodyTypecount).map(([body, {count,types}]) => ({name: body, value: count, types}))
     const radius = Math.min(pieWidth, pieHeight * 0.40)
     
 
@@ -163,7 +170,6 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
 
     const arcs = pie(pieChart)
     const pieGraph = svg.append("g").attr("transform", `translate(${pieMargin.left+375}, ${pieTop+450})`);
-    const ogSize = pieGraph.attr("transform")
     
     pieGraph.append("g")
         .attr("stroke", "white")
@@ -173,7 +179,14 @@ d3.csv("pokemon_alopez247.csv").then(data =>{
         .attr("fill", d => color(d.data.name))
         .attr("d", arc)
         .append("title")
-        .text(d => `${d.data.name}: ${d.data.value.toLocaleString("en-US")}`)
+        .text(d =>{
+            const typeLines = Object.entries(d.data.types)
+                .map(([type,count]) => `-${type}:${count}`)
+                .join("\n");
+            
+             return `${d.data.name}: ${d.data.value.toLocaleString("en-US")}\nTypes: \n${typeLines}`
+        })
+            
 
     const labels = radius * 0.8
     const arcLabel = d3.arc()
